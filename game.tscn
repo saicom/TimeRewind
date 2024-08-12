@@ -1,0 +1,98 @@
+[gd_scene load_steps=12 format=3 uid="uid://d1ykhepm604ae"]
+
+[ext_resource type="Shader" path="res://game.gdshader" id="1_3ryrf"]
+[ext_resource type="PackedScene" uid="uid://ckfgvfyuyrvmx" path="res://player.tscn" id="1_gaiqo"]
+[ext_resource type="PackedScene" uid="uid://clnwokpao5qx3" path="res://platform.tscn" id="1_on3at"]
+[ext_resource type="Script" path="res://game.gd" id="2_7fxjk"]
+[ext_resource type="Script" path="res://rewinder.gd" id="3_3s5l1"]
+[ext_resource type="Script" path="res://move_platform.gd" id="3_53pvc"]
+[ext_resource type="PackedScene" uid="uid://b6pr4guc3u5h3" path="res://chest.tscn" id="7_jqyl3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvljk"]
+shader = ExtResource("1_3ryrf")
+shader_parameter/levels = 5
+shader_parameter/spread = 0.05
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_svffy"]
+size = Vector2(111, 36)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2v7oj"]
+shader = ExtResource("1_3ryrf")
+shader_parameter/levels = 3
+shader_parameter/spread = 0.01
+
+[sub_resource type="Environment" id="Environment_6hg3k"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 1.12
+glow_blend_mode = 1
+glow_hdr_threshold = 0.9
+glow_hdr_scale = 0.91
+
+[node name="Game" type="Node2D"]
+material = SubResource("ShaderMaterial_kvljk")
+script = ExtResource("2_7fxjk")
+
+[node name="Player" parent="." instance=ExtResource("1_gaiqo")]
+position = Vector2(361, 574)
+scale = Vector2(3, 3)
+
+[node name="Platform" parent="." instance=ExtResource("1_on3at")]
+position = Vector2(-195, 637)
+scale = Vector2(40, 1)
+
+[node name="Platform2" parent="." instance=ExtResource("1_on3at")]
+position = Vector2(558, 510)
+
+[node name="Platform4" parent="." instance=ExtResource("1_on3at")]
+position = Vector2(1676, 1990)
+scale = Vector2(6, 1)
+
+[node name="Platform3" type="AnimatableBody2D" parent="."]
+position = Vector2(761, 402)
+script = ExtResource("3_53pvc")
+
+[node name="ColorRect" type="ColorRect" parent="Platform3"]
+offset_left = -54.0
+offset_top = -17.0
+offset_right = 56.0
+offset_bottom = 19.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+position = Vector2(0.5, 1)
+shape = SubResource("RectangleShape2D_svffy")
+
+[node name="Rewinder" type="Node" parent="Platform3"]
+script = ExtResource("3_3s5l1")
+
+[node name="Chest" parent="." instance=ExtResource("7_jqyl3")]
+position = Vector2(1822, 1971)
+scale = Vector2(2, 2)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
+material = SubResource("ShaderMaterial_2v7oj")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="."]
+offset_left = 1255.0
+offset_top = 522.0
+offset_right = 1455.0
+offset_bottom = 607.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 50
+bbcode_enabled = true
+text = "[wave amp=50 freq=3]Jump[/wave]"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6hg3k")
